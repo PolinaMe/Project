@@ -160,9 +160,9 @@ while True:
 
 		# every 100 frames, calculating average of ashape and adding it to chart
 		else:
-			if frame_counter%100==0:
-				arr_EAR.append(countEAR/100)
-				arr_time.append(frame_counter/100)
+			if frame_counter%300==0:
+				arr_EAR.append(countEAR/300)
+				arr_time.append(frame_counter/300-1)
 				print("~[frame #%d] MAR: %f " % (frame_counter,countMAR/100)) 
 				countEAR=0
 				countMAR=0
