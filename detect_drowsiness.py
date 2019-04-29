@@ -12,6 +12,8 @@ import dlib
 import cv2
 import math
 import matplotlib.pyplot as plt
+from database import insert
+import datetime
 
 def sound_alarm(path):
 	# play an alarm sound
@@ -48,7 +50,7 @@ ap.add_argument("-p", "--shape-predictor",
 	help="path to facial landmark predictor")
 ap.add_argument("-a", "--alarm", type=str, default="C:/Users/Polina/project/alarm.wav",
 	help="path alarm .WAV file")
-ap.add_argument("-w", "--webcam", type=int, default=1,
+ap.add_argument("-w", "--webcam", type=int, default=0,
 	help="index of webcam on system")
 args = vars(ap.parse_args())
  
@@ -157,13 +159,13 @@ while True:
 			if (maxEAR+minEAR)/2>0.15 and (maxEAR+minEAR)/2<0.35:
 				EYE_AR_THRESH=(maxEAR+minEAR)/2 # updating the blink/closed eye threshold
 			print (EYE_AR_THRESH)
-
+			countEAR=0
 		# every 100 frames, calculating average of ashape and adding it to chart
 		else:
 			if frame_counter%300==0:
-				arr_EAR.append(countEAR/300)
-				arr_time.append(frame_counter/300-1)
-				print("~[frame #%d] MAR: %f " % (frame_counter,countMAR/100)) 
+				arr_EAR.append(round(countEAR/300, 3))
+				arr_time.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+				print("~[frame #%d] EAR: %f " % (frame_counter,countEAR/300)) 
 				countEAR=0
 				countMAR=0
 
@@ -232,6 +234,7 @@ while True:
 	if key == ord("q"):
 		break
 
+insert (arr_time,arr_EAR)
 # showing plot at the end for running
 plt.plot(arr_time,arr_EAR)
 plt.ylim(0.2,0.4)
